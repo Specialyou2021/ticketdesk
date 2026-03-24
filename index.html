@@ -422,7 +422,7 @@ async function doLogin() {
   const err   = document.getElementById('lerr');
   const btn   = document.querySelector('.bp');
 
-  if (!email || !pwd) { err.textContent='Email aur password dono chahiye.'; err.style.display='block'; return; }
+  if (!email || !pwd) { err.textContent='Please Enter Email & Password'; err.style.display='block'; return; }
 
   btn.textContent = 'Signing in...';
   btn.disabled = true;
