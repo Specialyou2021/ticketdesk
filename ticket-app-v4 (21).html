@@ -1,0 +1,1598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>TicketDesk — SpecialYou</title>
+
+<!-- PWA Meta Tags -->
+<meta name="application-name" content="TicketDesk">
+<meta name="apple-mobile-web-app-title" content="TicketDesk">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#1a56db">
+<meta name="description" content="SpecialYou Support Ticket Management System">
+
+<!-- PWA Manifest (inline) -->
+<link rel="manifest" href="data:application/manifest+json,{
+  %22name%22:%22TicketDesk%20%E2%80%94%20SpecialYou%22,
+  %22short_name%22:%22TicketDesk%22,
+  %22description%22:%22SpecialYou%20Support%20Ticket%20Management%22,
+  %22start_url%22:%22.%22,
+  %22display%22:%22standalone%22,
+  %22background_color%22:%22%23f8f9fc%22,
+  %22theme_color%22:%22%231a56db%22,
+  %22orientation%22:%22portrait-primary%22,
+  %22icons%22:[
+    {%22src%22:%22data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A//www.w3.org/2000/svg'%20viewBox%3D'0%200%20512%20512'%3E%3Crect%20width%3D'512'%20height%3D'512'%20rx%3D'80'%20fill%3D'%231a56db'/%3E%3Cpath%20d%3D'M180%20240h152m-152%2072h152m48%20100H132a40%2040%200%2001-40-40V140a40%2040%200%200140-40h111.7a20%2020%200%200114.1%205.9l108.3%20108.3a20%2020%200%20015.9%2014.1V372a40%2040%200%2001-40%2040z'%20fill%3D'none'%20stroke%3D'white'%20stroke-width%3D'36'%20stroke-linecap%3D'round'/%3E%3C/svg%3E%22,%22sizes%22:%22512x512%22,%22type%22:%22image/svg+xml%22,%22purpose%22:%22any%20maskable%22}
+  ]
+}">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ── LIGHT MODE (default) ── */
+:root{
+  --primary:#1a56db;--primary-light:#e8f0fe;--primary-dark:#1240a4;
+  --surface:#fff;--surface-2:#f8f9fc;--surface-3:#f1f3f9;
+  --border:#e2e6f0;--border-strong:#c8cfe0;
+  --text-1:#111827;--text-2:#4b5563;--text-3:#9ca3af;
+  --success:#059669;--success-bg:#ecfdf5;
+  --warning:#d97706;--warning-bg:#fffbeb;
+  --danger:#dc2626;--danger-bg:#fef2f2;
+  --info:#0ea5e9;--info-bg:#f0f9ff;
+  --purple:#7c3aed;--purple-bg:#f5f3ff;
+  --r:6px;--rl:14px;
+  --sh:0 4px 12px rgba(0,0,0,.08);--shl:0 12px 32px rgba(0,0,0,.1);
+  --login-bg:linear-gradient(135deg,#f0f4ff,#fafbff 60%,#f0f9ff);
+  --overlay-bg:#fff;
+}
+
+/* ── DARK MODE ── */
+[data-theme="dark"]{
+  --primary:#4b80f0;--primary-light:#1e2d4a;--primary-dark:#6b97f7;
+  --surface:#1a1d27;--surface-2:#13151e;--surface-3:#22263a;
+  --border:#2a2f45;--border-strong:#3a4060;
+  --text-1:#e8eaf0;--text-2:#9aa3c0;--text-3:#5a6180;
+  --success:#34d399;--success-bg:#0a2a1e;
+  --warning:#fbbf24;--warning-bg:#2a1f08;
+  --danger:#f87171;--danger-bg:#2a0f0f;
+  --info:#38bdf8;--info-bg:#0a1e2a;
+  --purple:#a78bfa;--purple-bg:#1e1430;
+  --sh:0 4px 12px rgba(0,0,0,.4);--shl:0 12px 32px rgba(0,0,0,.5);
+  --login-bg:linear-gradient(135deg,#0d1117,#13151e 60%,#0d1117);
+  --overlay-bg:#1a1d27;
+}
+
+/* badge colours stay vivid in both modes */
+[data-theme="dark"] .pc{background:#3d1212;color:#f87171}
+[data-theme="dark"] .ph{background:#3d1f0a;color:#fb923c}
+[data-theme="dark"] .pm{background:#3d2e0a;color:#fbbf24}
+[data-theme="dark"] .pl{background:#0a2a14;color:#34d399}
+[data-theme="dark"] .so{background:#0f1f3d;color:#60a5fa}
+[data-theme="dark"] .swa{background:#1e1430;color:#a78bfa}
+[data-theme="dark"] .swv{background:#3d1f0a;color:#fb923c}
+[data-theme="dark"] .sc{background:#0a2a14;color:#34d399}
+[data-theme="dark"] .radmin{background:#1e1430;color:#a78bfa}
+[data-theme="dark"] .ruser{background:#0a1e2a;color:#38bdf8}
+[data-theme="dark"] .tabbtn.active{background:var(--surface-3);box-shadow:0 1px 3px rgba(0,0,0,.4)}
+[data-theme="dark"] #loading-overlay{background:var(--surface-2)}
+[data-theme="dark"] .confirm-box{background:var(--surface)}
+[data-theme="dark"] .mh{background:var(--surface)}
+[data-theme="dark"] .modal{background:var(--surface)}
+[data-theme="dark"] .lcard{background:var(--surface)}
+[data-theme="dark"] .fsel,.fsel2,.fi,.fta,.sinput{color-scheme:dark}
+[data-theme="dark"] .readonly-notice{background:#2a1f08;border-color:#6b4f1a;color:#fbbf24}
+
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:var(--surface-2);color:var(--text-1);min-height:100vh;font-size:14px;transition:background .2s,color .2s}
+.view{display:none}.view.active{display:block}
+
+/* ── THEME TOGGLE BUTTON ── */
+.theme-toggle{width:36px;height:36px;border-radius:var(--r);border:1.5px solid var(--border);background:var(--surface-3);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-2);transition:all .15s;flex-shrink:0}
+.theme-toggle:hover{background:var(--border);color:var(--text-1)}
+.theme-toggle svg{width:16px;height:16px;transition:transform .3s}
+.theme-toggle:hover svg{transform:rotate(20deg)}
+/* sun icon shown in dark, moon in light */
+.icon-sun{display:none}
+.icon-moon{display:block}
+[data-theme="dark"] .icon-sun{display:block}
+[data-theme="dark"] .icon-moon{display:none}
+
+/* sidebar theme toggle */
+.sb-theme{display:flex;align-items:center;justify-content:space-between;padding:10px 10px;border-top:1px solid var(--border)}
+.sb-theme-label{font-size:12px;color:var(--text-3);font-weight:500;padding-left:2px}
+.toggle-pill{width:44px;height:24px;background:var(--border-strong);border-radius:20px;cursor:pointer;position:relative;transition:background .2s;border:none;flex-shrink:0}
+.toggle-pill.on{background:var(--primary)}
+.toggle-pill::after{content:'';position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.toggle-pill.on::after{transform:translateX(20px)}
+
+/* LOGIN */
+#lv{min-height:100vh;display:none;align-items:center;justify-content:center;background:var(--login-bg)}
+#lv.active{display:flex}
+.lcard{background:var(--surface);border-radius:20px;padding:48px 44px;width:420px;box-shadow:var(--shl);border:1px solid var(--border);animation:su .4s ease}
+@keyframes su{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.llogo{display:flex;align-items:center;gap:10px;margin-bottom:32px}
+.llogoic{width:40px;height:40px;background:var(--primary);border-radius:10px;display:flex;align-items:center;justify-content:center}
+.llogoic svg{width:22px;height:22px;fill:none;stroke:#fff;stroke-width:2}
+.llogotext{font-size:20px;font-weight:600}.llogotext span{color:var(--primary)}
+.ltitle{font-size:24px;font-weight:600;margin-bottom:6px;letter-spacing:-.4px}
+.lsub{color:var(--text-2);font-size:14px;margin-bottom:28px}
+.fg{margin-bottom:16px}
+.fl{display:block;font-size:13px;font-weight:500;color:var(--text-2);margin-bottom:6px}
+.fi{width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:var(--r);font-family:inherit;font-size:14px;color:var(--text-1);background:var(--surface);outline:none;transition:border-color .15s,box-shadow .15s}
+.fi:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(26,86,219,.15)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 18px;border-radius:var(--r);font-family:inherit;font-size:14px;font-weight:500;cursor:pointer;border:none;transition:all .12s;position:relative;overflow:hidden;user-select:none;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.btn:active{transform:scale(.96)!important;opacity:.88}
+.ni:active{transform:scale(.97);opacity:.8}
+.toggle-pill:active{transform:scale(.93)}
+@media(max-width:768px){.btn:active,.ni:active,.mob-ni:active{transform:none!important;opacity:.7}}
+/* Ripple */
+.ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,.35);transform:scale(0);animation:ripple-out .5s ease-out forwards;pointer-events:none}
+[data-theme="dark"] .ripple{background:rgba(255,255,255,.15)}
+.bg .ripple,.bdanger .ripple{background:rgba(0,0,0,.08)}
+@keyframes ripple-out{to{transform:scale(4);opacity:0}}
+.bp{background:var(--primary);color:#fff;width:100%;padding:12px;font-size:15px}
+.bp:hover{background:var(--primary-dark);transform:translateY(-1px);box-shadow:0 4px 12px rgba(26,86,219,.3)}
+.bg{background:transparent;color:var(--text-2);border:1.5px solid var(--border)}
+.bg:hover{background:var(--surface-3);border-color:var(--border-strong)}
+.bsm{padding:7px 12px;font-size:13px}
+.bdanger{background:var(--danger-bg);color:var(--danger);border:1.5px solid var(--danger);border-opacity:.4}
+.bdanger:hover{opacity:.85}
+.bsuccess{background:var(--success-bg);color:var(--success);border:1.5px solid var(--success)}
+.lerr{color:var(--danger);font-size:13px;margin-top:8px;display:none}
+
+/* APP */
+#av{display:none;min-height:100vh}
+#av.active{display:flex;width:100vw}
+.sidebar{width:240px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:100;transition:background .2s}
+.sbh{padding:20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.sblogo{width:32px;height:32px;background:var(--primary);border-radius:8px;display:flex;align-items:center;justify-content:center}
+.sblogo svg{width:18px;height:18px;fill:none;stroke:#fff;stroke-width:2}
+.sbbrand{font-size:16px;font-weight:600;letter-spacing:-.3px}.sbbrand span{color:var(--primary)}
+.sbu{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;cursor:pointer;transition:background .12s}
+.sbu:hover{background:var(--surface-2)}
+.uav{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:#fff;flex-shrink:0}
+.uname{font-size:13px;font-weight:500}
+.urole{font-size:11px;display:inline-flex;padding:2px 7px;border-radius:20px;margin-top:2px;font-weight:500}
+.radmin{background:var(--purple-bg);color:var(--purple)}
+.ruser{background:var(--info-bg);color:var(--info)}
+.sbu-hint{font-size:10px;color:var(--text-3);margin-top:1px}
+.sbnav{padding:12px 10px;flex:1;overflow-y:auto}
+.nsl{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--text-3);padding:8px 10px 4px}
+.ni{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:var(--r);cursor:pointer;color:var(--text-2);font-size:13.5px;font-weight:400;transition:all .12s;margin-bottom:2px;border:none;background:none;width:100%;text-align:left;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.ni:hover{background:var(--surface-3);color:var(--text-1)}
+.ni.active{background:var(--primary-light);color:var(--primary);font-weight:500}
+.ni svg{width:16px;height:16px;flex-shrink:0}
+.nbadge{margin-left:auto;background:var(--primary);color:#fff;font-size:10px;font-weight:600;padding:1px 6px;border-radius:20px;min-width:18px;text-align:center}
+.sbf{padding:8px 10px;border-top:1px solid var(--border)}
+.main{margin-left:240px;flex:1;display:flex;flex-direction:column;min-height:100vh;min-width:0;max-width:calc(100vw - 240px)}
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 28px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;transition:background .2s;overflow:hidden}
+.tbtitle{font-size:17px;font-weight:600;letter-spacing:-.3px}
+.tbr{display:flex;align-items:center;gap:12px}
+/* TICKER */
+.ticker-wrap{background:linear-gradient(90deg,var(--primary) 0%,var(--primary-dark) 100%);height:32px;overflow:hidden;position:relative;display:none;flex-direction:row;width:100%}
+[data-theme="dark"] .ticker-wrap{background:linear-gradient(90deg,#1e2d4a 0%,#13204a 100%)}
+.ticker-label{flex-shrink:0;background:rgba(0,0,0,.18);height:100%;display:flex;align-items:center;padding:0 16px;font-size:11px;font-weight:700;color:rgba(255,255,255,.9);letter-spacing:.8px;text-transform:uppercase;gap:6px;border-right:1px solid rgba(255,255,255,.15)}
+.ticker-label svg{width:13px;height:13px;opacity:.8}
+.ticker-body{flex:1;overflow:hidden;cursor:default}
+.ticker-track{display:inline-flex;align-items:center;height:32px;white-space:nowrap;animation:ticker-scroll 35s linear infinite}
+.ticker-track.paused{animation-play-state:paused}
+.ticker-item{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:500;color:rgba(255,255,255,.95);padding:0 24px;border-right:1px solid rgba(255,255,255,.12)}
+@keyframes ticker-scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.content{padding:28px;min-width:0}
+
+/* STATS */
+.sgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-bottom:24px;width:100%}
+.scard{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:20px;transition:box-shadow .2s}
+.scard:hover{box-shadow:0 2px 8px rgba(0,0,0,.12)}
+.slabel{font-size:12px;color:var(--text-3);font-weight:500;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px}
+.sval{font-size:28px;font-weight:600;letter-spacing:-.5px;line-height:1}
+.ssub{font-size:12px;color:var(--text-3);margin-top:6px}
+
+/* CARD TABLE */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden}
+.ch{padding:18px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.ctitle{font-size:15px;font-weight:600}
+.filters{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.fsel{padding:7px 12px;border:1.5px solid var(--border);border-radius:var(--r);font-family:inherit;font-size:13px;color:var(--text-1);background:var(--surface);cursor:pointer;outline:none;transition:border-color .15s}
+.fsel:focus{border-color:var(--primary)}
+.sw{position:relative}
+.sicon{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--text-3)}
+.sinput{padding:7px 14px 7px 34px;border:1.5px solid var(--border);border-radius:var(--r);font-family:inherit;font-size:13px;color:var(--text-1);background:var(--surface);outline:none;transition:border-color .15s;width:220px}
+.sinput:focus{border-color:var(--primary)}
+table{width:100%;border-collapse:collapse}
+thead tr{background:var(--surface-2)}
+th{padding:11px 16px;text-align:left;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.6px;color:var(--text-3);border-bottom:1px solid var(--border)}
+td{padding:13px 16px;border-bottom:1px solid var(--border);font-size:13.5px;vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:var(--surface-2)}
+tbody tr{transition:background .1s;cursor:pointer}
+
+/* BADGES */
+.badge{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:20px;font-size:11.5px;font-weight:500;white-space:nowrap}
+.pc{background:#fef2f2;color:#dc2626}.ph{background:#fff7ed;color:#ea580c}
+.pm{background:#fffbeb;color:#d97706}.pl{background:#f0fdf4;color:#16a34a}
+.so{background:#eff6ff;color:#2563eb}.swa{background:#faf5ff;color:#7c3aed}
+.swv{background:#fff7ed;color:#ea580c}.sc{background:#f0fdf4;color:#16a34a}
+.tid{font-family:'DM Mono',monospace;font-size:12px;color:var(--text-3)}
+.ttitle{font-weight:500;color:var(--text-1)}
+.tdesc{font-size:12px;color:var(--text-3);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:260px}
+.achip{display:inline-flex;align-items:center;gap:6px}
+.aav{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:#fff;flex-shrink:0}
+
+/* MODAL */
+.mo{position:fixed;inset:0;background:rgba(17,24,39,.6);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;z-index:1000;opacity:0;pointer-events:none;transition:opacity .2s}
+.mo.open{opacity:1;pointer-events:all}
+.modal{background:var(--surface);border-radius:16px;width:580px;max-height:90vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:var(--shl);transform:scale(.96) translateY(8px);transition:transform .2s;border:1px solid var(--border)}
+.mo.open .modal{transform:scale(1) translateY(0)}
+.mh{padding:22px 28px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--surface);flex-shrink:0;z-index:1}
+.mtitle{font-size:17px;font-weight:600}
+.mclose{width:32px;height:32px;border-radius:8px;border:none;background:var(--surface-3);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-2);font-size:18px;transition:background .15s}
+.mclose:hover{background:var(--border)}
+.mb{padding:22px 28px;overflow-y:auto;flex:1}
+.mf{padding:14px 28px;border-top:1px solid var(--border);display:flex;gap:10px;justify-content:flex-end;flex-shrink:0;background:var(--surface)}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.fta{width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:var(--r);font-family:inherit;font-size:14px;color:var(--text-1);background:var(--surface);resize:vertical;min-height:80px;outline:none;transition:border-color .15s}
+.fta:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(26,86,219,.15)}
+.fsel2{width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:var(--r);font-family:inherit;font-size:14px;color:var(--text-1);background:var(--surface);outline:none;cursor:pointer;transition:border-color .15s}
+.fsel2:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(26,86,219,.15)}
+.fsel2:disabled{background:var(--surface-2);cursor:not-allowed;color:var(--text-3)}
+
+/* DETAIL */
+.dmeta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.ds{margin-bottom:18px}
+.dst{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.6px;color:var(--text-3);margin-bottom:8px}
+.rlist{display:flex;flex-direction:column;gap:10px}
+.ri{background:var(--surface-2);border-radius:var(--r);padding:12px 14px;border-left:3px solid var(--primary)}
+.rauth{font-size:12px;font-weight:600;color:var(--text-1)}
+.rtime{font-size:11px;color:var(--text-3);margin-left:8px}
+.rtxt{font-size:13px;color:var(--text-2);margin-top:4px;line-height:1.5}
+
+/* USER MANAGEMENT */
+.utable tr{cursor:default}
+.utag{display:inline-flex;padding:3px 10px;border-radius:20px;font-size:11.5px;font-weight:500}
+.uform{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+
+/* TAB */
+.tabs{display:flex;gap:2px;background:var(--surface-2);padding:4px;border-radius:var(--r);width:fit-content;margin-bottom:20px}
+.tabbtn{padding:7px 16px;border-radius:6px;border:none;background:none;font-family:inherit;font-size:13px;font-weight:500;color:var(--text-2);cursor:pointer;transition:all .15s}
+.tabbtn.active{background:var(--surface);color:var(--text-1);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+
+/* TOAST */
+.tc{position:fixed;bottom:24px;right:24px;z-index:2000;display:flex;flex-direction:column;gap:8px}
+.toast{background:var(--text-1);color:var(--surface);padding:12px 18px;border-radius:var(--r);font-size:13.5px;box-shadow:var(--shl);display:flex;align-items:center;gap:10px;animation:ti .3s ease;max-width:320px}
+@keyframes ti{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+.toast.success{background:var(--success)}.toast.error{background:var(--danger)}
+
+/* EMPTY */
+.empty{text-align:center;padding:60px 20px}
+.empty h3{font-size:16px;font-weight:600;margin-bottom:6px}
+.empty p{color:var(--text-3);font-size:13px}
+
+/* CONFIRM */
+.confirm-box{background:var(--surface);border-radius:16px;width:400px;box-shadow:var(--shl);transform:scale(.96);transition:transform .2s;border:1px solid var(--border)}
+.mo.open .confirm-box{transform:scale(1)}
+
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:3px}
+
+/* SLA */
+.sla-ok{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;font-weight:500;color:var(--success)}
+.sla-warn{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;font-weight:500;color:var(--warning)}
+.sla-breach{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;font-weight:500;color:var(--danger)}
+.sla-none{font-size:11.5px;color:var(--text-3)}
+.sla-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.sla-ok .sla-dot{background:var(--success)}
+.sla-warn .sla-dot{background:var(--warning)}
+.sla-breach .sla-dot{background:var(--danger)}
+.sla-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:20px;grid-column:span 4;display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.sla-item{text-align:center;padding:12px;border-radius:var(--r);background:var(--surface-2)}
+.sla-val{font-size:22px;font-weight:600;margin-bottom:4px}
+.sla-lbl{font-size:11px;color:var(--text-3);text-transform:uppercase;letter-spacing:.5px}
+.readonly-notice{background:var(--warning-bg);border:1px solid #fde68a;border-radius:var(--r);padding:8px 12px;font-size:12px;color:var(--warning);margin-bottom:14px;display:flex;align-items:center;gap:6px}
+
+/* LOADING OVERLAY */
+#loading-overlay{position:fixed;inset:0;background:var(--overlay-bg);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;opacity:0;pointer-events:none;transition:opacity .3s}
+#loading-overlay.show{opacity:1;pointer-events:all}
+.ld-logo{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.ld-icon{width:44px;height:44px;background:var(--primary);border-radius:12px;display:flex;align-items:center;justify-content:center}
+.ld-icon svg{width:24px;height:24px;fill:none;stroke:#fff;stroke-width:2}
+.ld-brand{font-size:22px;font-weight:600;letter-spacing:-.3px}.ld-brand span{color:var(--primary)}
+.ld-spinner{width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.ld-msg{font-size:13px;color:var(--text-3);font-weight:500;letter-spacing:.2px}
+.ld-dots span{animation:blink 1.2s infinite;opacity:0}
+.ld-dots span:nth-child(2){animation-delay:.2s}
+.ld-dots span:nth-child(3){animation-delay:.4s}
+@keyframes blink{0%,80%,100%{opacity:0}40%{opacity:1}}
+
+/* PASSWORD CHANGE MODAL */
+.pw-strength{height:4px;border-radius:2px;margin-top:6px;transition:all .3s;background:var(--border)}
+.pw-strength.weak{background:var(--danger);width:33%}
+.pw-strength.fair{background:var(--warning);width:66%}
+.pw-strength.strong{background:var(--success);width:100%}
+.pw-strength-label{font-size:11px;margin-top:4px;color:var(--text-3)}
+
+/* ══════════════════════════════════════
+   RESPONSIVE — MOBILE & TABLET
+══════════════════════════════════════ */
+
+/* Hamburger button — hidden on desktop */
+.mob-menu-btn{display:none;width:38px;height:38px;border-radius:var(--r);border:1.5px solid var(--border);background:var(--surface-3);cursor:pointer;align-items:center;justify-content:center;color:var(--text-2);flex-shrink:0}
+.mob-menu-btn svg{width:18px;height:18px}
+
+/* Sidebar overlay backdrop */
+.sb-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:99;opacity:0;pointer-events:none;transition:opacity .25s,opacity .25s}
+.sb-overlay.show{opacity:1;pointer-events:all}
+
+/* Mobile bottom nav bar */
+.mob-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-top:1px solid var(--border);z-index:98;padding:6px 0 max(6px,env(safe-area-inset-bottom));box-shadow:0 -4px 16px rgba(0,0,0,.06)}
+.mob-nav-inner{display:flex;align-items:stretch;justify-content:space-around}
+.mob-ni{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:6px 4px;border:none;background:none;cursor:pointer;color:var(--text-3);font-family:inherit;font-size:10px;font-weight:500;transition:color .15s;position:relative;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.mob-ni svg{width:20px;height:20px;stroke-width:1.8}
+.mob-ni.active{color:var(--primary)}
+.mob-ni.active svg{stroke-width:2.2}
+.mob-badge{position:absolute;top:4px;right:calc(50% - 18px);background:var(--primary);color:#fff;font-size:9px;font-weight:700;padding:1px 5px;border-radius:20px;min-width:16px;text-align:center}
+
+@media (max-width: 768px) {
+  /* Show hamburger, hide desktop sidebar by default */
+  .mob-menu-btn{display:flex}
+  .mob-nav{display:block}
+
+  /* Sidebar slides in from left */
+  .sidebar{transform:translateX(-100%);transition:transform .28s cubic-bezier(.4,0,.2,1),background .2s;z-index:200;pointer-events:none}
+  .sidebar.mob-open{transform:translateX(0);pointer-events:all}
+  .sb-overlay{display:block}
+
+  /* Main takes full width */
+  .main{margin-left:0;max-width:100vw}
+
+  /* Topbar adjustments */
+  .topbar{padding:0 14px;gap:10px}
+  .tbtitle{font-size:15px}
+
+  /* Content padding smaller */
+  .content{padding:16px;padding-bottom:80px} /* extra bottom for mob nav */
+
+  /* Stats: 2 columns on mobile */
+  .sgrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  .sla-card{grid-template-columns:repeat(3,1fr);grid-column:span 1}
+
+  /* Cards header wrap better */
+  .ch{padding:14px 16px;gap:10px}
+  .filters{gap:8px}
+  .sinput{width:160px}
+
+  /* Tables: horizontal scroll */
+  .card{overflow-x:auto}
+  table{min-width:560px}
+
+  /* Modals full screen on mobile */
+  .modal{width:100vw!important;max-width:100vw;max-height:92vh;border-radius:20px 20px 0 0;position:fixed;bottom:0;left:0;right:0;transform:translateY(100%)!important;margin:0}
+  .mo.open .modal{transform:translateY(0)!important}
+  .mo{align-items:flex-end}
+  .confirm-box{width:100vw!important;max-width:100vw;border-radius:20px 20px 0 0;position:fixed;bottom:0;transform:translateY(100%)!important}
+  .mo.open .confirm-box{transform:translateY(0)!important}
+  .mb{padding:18px 20px}
+  .mh{padding:18px 20px 14px}
+  .mf{padding:12px 20px;flex-wrap:wrap}
+  .mf .btn{flex:1;min-width:100px}
+  .frow{grid-template-columns:1fr}
+
+  /* Form rows single column */
+  .uform{grid-template-columns:1fr}
+
+  /* Login card */
+  .lcard{width:95vw;padding:32px 24px}
+
+  /* Toast bottom adjusted for mob nav */
+  .tc{bottom:80px;right:12px;left:12px}
+  .toast{max-width:100%}
+
+  /* Tabs scrollable */
+  .tabs{overflow-x:auto;width:100%}
+
+  /* SLA card */
+  .sla-card{grid-column:span 2}
+
+  /* New ticket button — icon only on very small screens */
+  .tb-new-label{display:none}
+
+  /* Profile modal adjust */
+  #pm{align-items:flex-end}
+}
+
+@media (max-width: 400px) {
+  .sgrid{grid-template-columns:1fr 1fr;gap:10px}
+  .sval{font-size:22px}
+  .content{padding:12px;padding-bottom:80px}
+}
+
+@media (min-width:769px) {
+  /* Hide mobile-only elements on desktop */
+  .mob-nav{display:none!important}
+  .mob-menu-btn{display:none!important}
+  .sb-overlay{display:none!important}
+  .sidebar{transform:none!important}
+}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR OVERLAY -->
+<div class="sb-overlay" id="sb-overlay" onclick="closeSidebar()"></div>
+
+<!-- ═══ LOADING OVERLAY ═══ -->
+<div id="loading-overlay">
+  <div class="ld-logo">
+    <div class="ld-icon"><svg viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg></div>
+    <div class="ld-brand">Ticket<span>Desk</span></div>
+  </div>
+  <div class="ld-spinner"></div>
+  <div class="ld-msg" id="ld-msg">Loading<span class="ld-dots"><span>.</span><span>.</span><span>.</span></span></div>
+</div>
+
+<!-- ═══ LOGIN ═══ -->
+<div id="lv" class="view active">
+  <div class="lcard">
+    <div class="llogo">
+      <div class="llogoic"><svg viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg></div>
+      <div class="llogotext">Ticket<span>Desk</span></div>
+    </div>
+    <h1 class="ltitle">Welcome back</h1>
+    <p class="lsub">Sign in to SpecialYou support portal</p>
+    <div class="fg"><label class="fl">Email address</label><input type="email" id="lemail" class="fi" placeholder="you@specialyou.in"></div>
+    <div class="fg"><label class="fl">Password</label><input type="password" id="lpwd" class="fi" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
+    <div class="lerr" id="lerr">Invalid email or password.</div>
+    <br>
+    <button class="btn bp" onclick="doLogin()">Sign in to TicketDesk</button>
+  </div>
+</div>
+
+<!-- ═══ APP ═══ -->
+<div id="av" class="view">
+  <aside class="sidebar">
+    <div class="sbh">
+      <div class="sblogo"><svg viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg></div>
+      <div class="sbbrand">Ticket<span>Desk</span></div>
+    </div>
+    <!-- Clickable user area → opens profile/password modal -->
+    <div class="sbu" onclick="openProfileModal()" title="Click to change password or view profile">
+      <div class="uav" id="sbav">A</div>
+      <div>
+        <div class="uname" id="sbname">Admin</div>
+        <div class="urole radmin" id="sbrole">Admin</div>
+        <div class="sbu-hint">Click to edit profile</div>
+      </div>
+    </div>
+    <nav class="sbnav">
+      <div class="nsl">Main</div>
+      <button class="ni active" onclick="sp('dashboard');closeSidebar()" id="nav-dashboard">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Dashboard
+      </button>
+      <button class="ni" onclick="sp('tickets');closeSidebar()" id="nav-tickets">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>My Tickets
+        <span class="nbadge" id="nav-count">0</span>
+      </button>
+      <button class="ni" onclick="sp('search');closeSidebar()" id="nav-search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>Search All Tickets
+      </button>
+      <div class="nsl" id="adm-sec" style="display:none">Admin</div>
+      <button class="ni" onclick="sp('admin');closeSidebar()" id="nav-admin" style="display:none">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>All Tickets
+      </button>
+      <button class="ni" onclick="sp('users');closeSidebar()" id="nav-users" style="display:none">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>Users
+      </button>
+    </nav>
+    <div class="sbf">
+      <!-- Dark mode toggle inside sidebar -->
+      <div class="sb-theme">
+        <span class="sb-theme-label">Dark Mode</span>
+        <button class="toggle-pill" id="theme-pill" onclick="toggleTheme()" title="Toggle dark/light mode"></button>
+      </div>
+      <button class="ni" onclick="doLogout()" style="color:var(--danger);margin-top:4px">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>Sign out
+      </button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div style="display:flex;align-items:center;gap:10px;min-width:0">
+        <button class="mob-menu-btn" onclick="openSidebar()" aria-label="Menu">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <div class="tbtitle" id="tbtitle">Dashboard</div>
+      </div>
+      <div class="tbr">
+        <!-- Theme toggle in topbar too -->
+        <button class="theme-toggle" onclick="toggleTheme()" title="Toggle dark/light mode">
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        </button>
+        <button class="btn bp bsm" onclick="openCreateModal()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>New Ticket
+        </button>
+      </div>
+    </header>
+    <!-- TICKER BAR -->
+    <div class="ticker-wrap" id="ticker-wrap">
+      <div class="ticker-label">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"/></svg>
+        Announcements
+      </div>
+      <div class="ticker-body" id="ticker-body">
+        <div class="ticker-track" id="ticker-track"></div>
+      </div>
+    </div>
+    <div class="content">
+
+      <!-- DASHBOARD -->
+      <div id="page-dashboard">
+        <div class="sgrid" id="sgrid"></div>
+        <div class="sgrid" style="grid-template-columns:1fr;margin-bottom:24px" id="sla-grid"></div>
+        <div class="card">
+          <div class="ch"><div class="ctitle">Recent Tickets</div></div>
+          <table><thead><tr><th>Ticket</th><th>Priority</th><th>Status</th><th>Assigned To</th><th>Due Date</th><th>Date</th></tr></thead>
+          <tbody id="rec-tbody"></tbody></table>
+        </div>
+      </div>
+
+      <!-- SEARCH ALL TICKETS -->
+      <div id="page-search" style="display:none">
+        <div class="card">
+          <div class="ch">
+            <div class="ctitle">Search All Tickets</div>
+            <div class="filters">
+              <div class="sw"><span class="sicon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span><input type="text" class="sinput" id="gsearch" placeholder="Search by ID, title, person..." oninput="rsearch()"></div>
+              <select class="fsel" id="gfs" onchange="rsearch()"><option value="">All Status</option><option value="open">Open</option><option value="waiting-approval">Waiting for Approval</option><option value="waiting-vendor">Waiting with Vendor</option><option value="closed">Closed</option></select>
+              <select class="fsel" id="gfp" onchange="rsearch()"><option value="">All Priority</option><option value="critical">Critical</option><option value="high">High</option><option value="medium">Medium</option><option value="low">Low</option></select>
+            </div>
+          </div>
+          <table><thead><tr><th>Ticket</th><th>Priority</th><th>Status</th><th>Assigned To</th><th>Created By</th><th>Due Date</th><th>Action</th></tr></thead>
+          <tbody id="search-tbody"></tbody></table>
+        </div>
+      </div>
+
+      <!-- MY TICKETS -->
+      <div id="page-tickets" style="display:none">
+        <div class="card">
+          <div class="ch">
+            <div class="ctitle">My Tickets</div>
+            <div class="filters">
+              <div class="sw"><span class="sicon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span><input type="text" class="sinput" id="tsearch" placeholder="Search tickets..." oninput="rtick()"></div>
+              <select class="fsel" id="tfs" onchange="rtick()"><option value="">All Status</option><option value="open">Open</option><option value="waiting-approval">Waiting for Approval</option><option value="waiting-vendor">Waiting with Vendor</option><option value="closed">Closed</option></select>
+              <select class="fsel" id="tfp" onchange="rtick()"><option value="">All Priority</option><option value="critical">Critical</option><option value="high">High</option><option value="medium">Medium</option><option value="low">Low</option></select>
+            </div>
+          </div>
+          <table><thead><tr><th>Ticket</th><th>Priority</th><th>Status</th><th>Assigned To</th><th>Due Date</th><th>Created</th><th>Action</th></tr></thead>
+          <tbody id="tick-tbody"></tbody></table>
+        </div>
+      </div>
+
+      <!-- ALL TICKETS (ADMIN) -->
+      <div id="page-admin" style="display:none">
+        <div class="tabs">
+          <button class="tabbtn active" onclick="setAdminTab('all',this)">All Tickets</button>
+          <button class="tabbtn" onclick="setAdminTab('unassigned',this)">Unassigned</button>
+          <button class="tabbtn" onclick="setAdminTab('open',this)">Open</button>
+        </div>
+        <div class="card">
+          <div class="ch">
+            <div class="ctitle" id="adm-title">All Tickets</div>
+            <div class="filters">
+              <select class="fsel" id="afs" onchange="radmin()"><option value="">All Status</option><option value="open">Open</option><option value="waiting-approval">Waiting for Approval</option><option value="waiting-vendor">Waiting with Vendor</option><option value="closed">Closed</option></select>
+              <select class="fsel" id="afp" onchange="radmin()"><option value="">All Priority</option><option value="critical">Critical</option><option value="high">High</option><option value="medium">Medium</option><option value="low">Low</option></select>
+            </div>
+          </div>
+          <table><thead><tr><th>Ticket</th><th>Priority</th><th>Status</th><th>Assigned To</th><th>Created By</th><th>Due Date</th><th>Date</th><th>Action</th></tr></thead>
+          <tbody id="adm-tbody"></tbody></table>
+        </div>
+      </div>
+
+      <!-- USERS (ADMIN) -->
+      <div id="page-users" style="display:none">
+        <div class="card" style="margin-bottom:20px">
+          <div class="ch">
+            <div class="ctitle">Team Members</div>
+            <button class="btn bp bsm" onclick="openAddUser()">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add User
+            </button>
+          </div>
+          <table class="utable">
+            <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Department</th><th>Status</th><th>Tickets</th><th>Actions</th></tr></thead>
+            <tbody id="utbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<!-- MOBILE BOTTOM NAV -->
+<nav class="mob-nav" id="mob-nav" style="display:none">
+  <div class="mob-nav-inner">
+    <button class="mob-ni active" id="mob-nav-dashboard" onclick="sp('dashboard');closeSidebar()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      Dashboard
+    </button>
+    <button class="mob-ni" id="mob-nav-tickets" onclick="sp('tickets');closeSidebar()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+      Tickets
+      <span class="mob-badge" id="mob-nav-count" style="display:none">0</span>
+    </button>
+    <button class="mob-ni" onclick="openCreateModal()">
+      <div style="width:38px;height:38px;background:var(--primary);border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:2px">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      </div>
+      New
+    </button>
+    <button class="mob-ni" id="mob-nav-search" onclick="sp('search');closeSidebar()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      Search
+    </button>
+    <button class="mob-ni" onclick="openSidebar()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      More
+    </button>
+  </div>
+</nav>
+
+<!-- ═══ CREATE TICKET MODAL ═══ -->
+<div class="mo" id="cm">
+  <div class="modal">
+    <div class="mh"><div class="mtitle">Create New Ticket</div><button class="mclose" onclick="cm2('cm')">×</button></div>
+    <div class="mb">
+      <div class="fg"><label class="fl">Title *</label><input type="text" id="nt" class="fi" placeholder="Brief description of the issue"></div>
+      <div class="fg"><label class="fl">Description</label><textarea id="nd" class="fta" placeholder="Detailed description..."></textarea></div>
+      <div class="frow">
+        <div class="fg"><label class="fl">Priority</label>
+          <select id="np" class="fsel2"><option value="low">Low</option><option value="medium" selected>Medium</option><option value="high">High</option><option value="critical">Critical</option></select>
+        </div>
+        <div class="fg" id="assign-wrap"><label class="fl">Assign To</label>
+          <select id="na" class="fsel2"><option value="">Unassigned</option></select>
+        </div>
+      </div>
+      <div class="fg"><label class="fl">Due Date (SLA) <span style="color:var(--text-3);font-weight:400">— optional</span></label><input type="datetime-local" id="nsla" class="fi"></div>
+    </div>
+    <div class="mf"><button class="btn bg" onclick="cm2('cm')">Cancel</button><button class="btn bp" onclick="createTicket()">Create Ticket</button></div>
+  </div>
+</div>
+
+<!-- ═══ DETAIL MODAL ═══ -->
+<div class="mo" id="dm">
+  <div class="modal">
+    <div class="mh">
+      <div><div class="mtitle" id="d-id"></div><div style="font-size:12px;color:var(--text-3);margin-top:2px" id="d-created"></div></div>
+      <button class="mclose" onclick="cm2('dm')">×</button>
+    </div>
+    <div class="mb">
+      <div id="d-readonly-notice" class="readonly-notice" style="display:none">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        You can view this ticket but cannot edit it (not assigned to you).
+      </div>
+      <h2 style="font-size:16px;font-weight:600;margin-bottom:8px" id="d-title"></h2>
+      <div class="dmeta" id="d-meta"></div>
+      <div class="ds"><div class="dst">Description</div><div id="d-desc" style="background:var(--surface-2);padding:12px 14px;border-radius:var(--r);font-size:14px;line-height:1.6;color:var(--text-2)"></div></div>
+      <div class="frow" style="margin-bottom:16px">
+        <div class="fg"><label class="fl">Status</label>
+          <select id="d-status" class="fsel2" onchange="uf('status')">
+            <option value="open">Open</option><option value="waiting-approval">Waiting for Approval</option><option value="waiting-vendor">Waiting with Vendor</option><option value="closed">Closed</option>
+          </select>
+        </div>
+        <div class="fg"><label class="fl">Priority</label>
+          <select id="d-priority" class="fsel2" onchange="uf('priority')">
+            <option value="low">Low</option><option value="medium">Medium</option><option value="high">High</option><option value="critical">Critical</option>
+          </select>
+        </div>
+        <div class="fg"><label class="fl">Assigned To</label>
+          <select id="d-assign" class="fsel2" onchange="uf('assigned')"><option value="">Unassigned</option></select>
+        </div>
+        <div class="fg"><label class="fl">Created By</label><input type="text" id="d-by" class="fi" readonly style="background:var(--surface-2);color:var(--text-2)"></div>
+      </div>
+      <div class="frow" style="margin-bottom:16px">
+        <div class="fg"><label class="fl">Due Date (SLA)</label><input type="datetime-local" id="d-sla" class="fi" onchange="uf('sla')"></div>
+        <div class="fg" style="display:flex;align-items:flex-end;padding-bottom:2px"><div id="d-sla-status"></div></div>
+      </div>
+      <div class="ds">
+        <div class="dst">Remarks & Updates</div>
+        <div class="rlist" id="rlist" style="margin-bottom:12px"></div>
+        <div id="d-remark-wrap" style="display:flex;gap:10px">
+          <input type="text" id="nr" class="fi" placeholder="Add a remark or update..." style="flex:1" onkeydown="if(event.key==='Enter')addRemark()">
+          <button class="btn bg bsm" onclick="addRemark()">Add</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ ADD/EDIT USER MODAL ═══ -->
+<div class="mo" id="um">
+  <div class="modal" style="width:500px">
+    <div class="mh"><div class="mtitle" id="um-title">Add New User</div><button class="mclose" onclick="cm2('um')">×</button></div>
+    <div class="mb">
+      <div class="uform">
+        <div class="fg"><label class="fl">Full Name *</label><input type="text" id="un" class="fi" placeholder="Full name"></div>
+        <div class="fg"><label class="fl">Email *</label><input type="email" id="ue" class="fi" placeholder="user@specialyou.in"></div>
+        <div class="fg"><label class="fl">Password *</label><input type="password" id="upw" class="fi" placeholder="Set password"></div>
+        <div class="fg"><label class="fl">Role</label>
+          <select id="ur" class="fsel2"><option value="user">User</option><option value="admin">Admin</option></select>
+        </div>
+        <div class="fg"><label class="fl">Department</label><input type="text" id="udept" class="fi" placeholder="e.g. IT, Sales, HR"></div>
+        <div class="fg"><label class="fl">Phone</label><input type="text" id="uph" class="fi" placeholder="+91 XXXXX XXXXX"></div>
+      </div>
+    </div>
+    <div class="mf"><button class="btn bg" onclick="cm2('um')">Cancel</button><button class="btn bp" id="um-save" onclick="saveUser()">Add User</button></div>
+  </div>
+</div>
+
+<!-- ═══ CONFIRM DELETE MODAL ═══ -->
+<div class="mo" id="dconf">
+  <div class="confirm-box">
+    <div class="mh"><div class="mtitle">Remove User</div><button class="mclose" onclick="cm2('dconf')">×</button></div>
+    <div class="mb">
+      <p style="color:var(--text-2);font-size:14px;line-height:1.6">Are you sure you want to remove <strong id="del-name"></strong>? Their tickets will remain but they won't be able to log in.</p>
+    </div>
+    <div class="mf"><button class="btn bg" onclick="cm2('dconf')">Cancel</button><button class="btn bdanger" onclick="confirmDelete()">Remove User</button></div>
+  </div>
+</div>
+
+<!-- ═══ PROFILE / CHANGE PASSWORD MODAL ═══ -->
+<div class="mo" id="pm">
+  <div class="modal" style="width:440px">
+    <div class="mh">
+      <div class="mtitle">My Profile</div>
+      <button class="mclose" onclick="cm2('pm')">×</button>
+    </div>
+    <div class="mb">
+      <!-- Profile info card -->
+      <div style="display:flex;align-items:center;gap:14px;background:var(--surface-2);border-radius:var(--r);padding:16px 18px;margin-bottom:22px;border:1px solid var(--border)">
+        <div class="uav" id="pm-av" style="width:48px;height:48px;font-size:16px"></div>
+        <div>
+          <div style="font-size:15px;font-weight:600" id="pm-name"></div>
+          <div style="font-size:13px;color:var(--text-3)" id="pm-email"></div>
+          <div style="margin-top:4px" id="pm-role-badge"></div>
+        </div>
+      </div>
+
+      <!-- Change Password section -->
+      <div style="font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.6px;color:var(--text-3);margin-bottom:14px">Change Password</div>
+      <div class="fg">
+        <label class="fl">Current Password</label>
+        <input type="password" id="pw-current" class="fi" placeholder="Enter your current password">
+      </div>
+      <div class="fg">
+        <label class="fl">New Password</label>
+        <input type="password" id="pw-new" class="fi" placeholder="At least 6 characters" oninput="checkPwStrength()">
+        <div class="pw-strength" id="pw-strength-bar"></div>
+        <div class="pw-strength-label" id="pw-strength-label"></div>
+      </div>
+      <div class="fg">
+        <label class="fl">Confirm New Password</label>
+        <input type="password" id="pw-confirm" class="fi" placeholder="Re-enter new password">
+      </div>
+    </div>
+    <div class="mf">
+      <button class="btn bg" onclick="cm2('pm')">Cancel</button>
+      <button class="btn bp" id="pw-save-btn" onclick="changePassword()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        Update Password
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="tc" id="tc"></div>
+
+<script>
+// ═══════════════════════════════════════════════
+//  CONFIG — Paste your Apps Script URL here
+// ═══════════════════════════════════════════════
+var API_URL = 'https://script.google.com/macros/s/AKfycbwX__rzsSZ-YKWw8WOhtiyKkFKJlgwlkMZohRIqsjlHiDLkiW13MBuSmIDp589ySCMztA/exec';
+
+// ═══ STATE ═══
+let users    = [];
+let tickets  = [];
+let cu       = null;
+let ctid     = null;
+let adminTab = 'all';
+let uidEdit  = null;
+let uidDel   = null;
+
+// ════════════════════════════════════════════════
+//  THEME
+// ════════════════════════════════════════════════
+function initTheme() {
+  const saved = localStorage.getItem('td-theme') || 'light';
+  applyTheme(saved);
+}
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  const pill = document.getElementById('theme-pill');
+  if (pill) pill.classList.toggle('on', theme === 'dark');
+}
+function toggleTheme() {
+  const current = document.documentElement.getAttribute('data-theme') || 'light';
+  const next    = current === 'dark' ? 'light' : 'dark';
+  localStorage.setItem('td-theme', next);
+  applyTheme(next);
+}
+// Apply on load immediately to prevent flash
+initTheme();
+
+// ── AUTO-RESTORE SESSION ON REFRESH ──
+(async function restoreSession() {
+  const saved = localStorage.getItem('td-session');
+  if (!saved) return;
+  try {
+    cu = JSON.parse(saved);
+    showLoader('Restoring your session');
+    await loadAll();
+    hideLoader();
+    document.getElementById('lv').classList.remove('active');
+    document.getElementById('av').classList.add('active');
+    document.getElementById('mob-nav').style.display = '';
+    document.getElementById('mob-nav').style.display = '';
+    setupUI(); sp('dashboard'); initTicker();
+  } catch(e) {
+    hideLoader();
+    localStorage.removeItem('td-session');
+    cu = null;
+  }
+})();
+
+// ════════════════════════════════════════════════
+//  API HELPERS
+// ════════════════════════════════════════════════
+async function apiGet(params) {
+  const url = API_URL + '?' + new URLSearchParams(params);
+  const res = await fetch(url, { method: 'GET', redirect: 'follow' });
+  const text = await res.text();
+  try { return JSON.parse(text); }
+  catch(e) { return { status:'error', message:'Bad response: ' + text.slice(0,120) }; }
+}
+async function apiPost(body) {
+  const res = await fetch(API_URL, {
+    method: 'POST', redirect: 'follow',
+    headers: { 'Content-Type': 'text/plain' },
+    body: JSON.stringify(body)
+  });
+  const text = await res.text();
+  try { return JSON.parse(text); }
+  catch(e) { return { status:'error', message:'Bad response: ' + text.slice(0,120) }; }
+}
+
+// ════════════════════════════════════════════════
+//  LOADING OVERLAY
+// ════════════════════════════════════════════════
+function showLoader(msg) {
+  document.getElementById('ld-msg').innerHTML = msg + '<span class="ld-dots"><span>.</span><span>.</span><span>.</span></span>';
+  document.getElementById('loading-overlay').classList.add('show');
+}
+function hideLoader() {
+  document.getElementById('loading-overlay').classList.remove('show');
+}
+
+// ════════════════════════════════════════════════
+//  AUTH
+// ════════════════════════════════════════════════
+async function doLogin() {
+  const email = document.getElementById('lemail').value.trim().toLowerCase();
+  const pwd   = document.getElementById('lpwd').value;
+  const err   = document.getElementById('lerr');
+  const btn   = document.querySelector('#lv .bp');
+  if (!email || !pwd) { err.textContent='Please enter both email and password.'; err.style.display='block'; return; }
+  btn.textContent = 'Signing in...'; btn.disabled = true;
+  try {
+    showLoader('Verifying credentials');
+    const r = await apiGet({ action: 'login', email, pwd });
+    if (r.status !== 'ok') {
+      hideLoader();
+      err.textContent = 'Invalid email or password.'; err.style.display = 'block';
+      btn.textContent = 'Sign in to TicketDesk'; btn.disabled = false; return;
+    }
+    err.style.display = 'none'; cu = r.data;
+    localStorage.setItem('td-session', JSON.stringify(cu)); // save session
+    showLoader('Loading your workspace');
+    await loadAll();
+    hideLoader();
+    document.getElementById('lv').classList.remove('active');
+    document.getElementById('av').classList.add('active');
+    document.getElementById('mob-nav').style.display = '';
+    setupUI(); sp('dashboard'); initTicker();
+    toast('Welcome back, ' + cu.name.split(' ')[0] + '!', 'success');
+  } catch(e) {
+    hideLoader();
+    err.textContent = 'Unable to connect to server. Please check the API URL.'; err.style.display = 'block';
+  }
+  btn.textContent = 'Sign in to TicketDesk'; btn.disabled = false;
+}
+
+async function loadAll() {
+  const [uRes, tRes] = await Promise.all([
+    apiGet({ action: 'getUsers' }),
+    apiGet({ action: 'getTickets' })
+  ]);
+  if (uRes.status === 'ok') users   = uRes.data;
+  if (tRes.status === 'ok') tickets = tRes.data;
+}
+
+function doLogout() {
+  cu = null; users = []; tickets = [];
+  localStorage.removeItem('td-session');
+  document.getElementById('mob-nav').style.display = 'none';
+  document.getElementById('av').classList.remove('active');
+  document.getElementById('lv').classList.add('active');
+  document.getElementById('lemail').value = '';
+  document.getElementById('lpwd').value   = '';
+}
+
+// ════════════════════════════════════════════════
+//  PROFILE & CHANGE PASSWORD
+// ════════════════════════════════════════════════
+function openProfileModal() {
+  if (!cu) return;
+  // Fill in profile info
+  const av = document.getElementById('pm-av');
+  av.textContent  = initials(cu.name);
+  av.style.background = cu.color;
+  document.getElementById('pm-name').textContent  = cu.name;
+  document.getElementById('pm-email').textContent = cu.email;
+  document.getElementById('pm-role-badge').innerHTML =
+    `<span class="urole ${cu.role==='admin'?'radmin':'ruser'}">${cu.role==='admin'?'Admin':'Member'}</span>`;
+  // Clear password fields
+  ['pw-current','pw-new','pw-confirm'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('pw-strength-bar').className = 'pw-strength';
+  document.getElementById('pw-strength-label').textContent = '';
+  om('pm');
+}
+
+function checkPwStrength() {
+  const pw  = document.getElementById('pw-new').value;
+  const bar = document.getElementById('pw-strength-bar');
+  const lbl = document.getElementById('pw-strength-label');
+  if (!pw) { bar.className='pw-strength'; lbl.textContent=''; return; }
+  const strong = pw.length >= 8 && /[A-Z]/.test(pw) && /[0-9]/.test(pw);
+  const fair   = pw.length >= 6;
+  if (strong) { bar.className='pw-strength strong'; lbl.textContent='Strong'; lbl.style.color='var(--success)'; }
+  else if (fair) { bar.className='pw-strength fair'; lbl.textContent='Fair'; lbl.style.color='var(--warning)'; }
+  else { bar.className='pw-strength weak'; lbl.textContent='Weak'; lbl.style.color='var(--danger)'; }
+}
+
+async function changePassword() {
+  const current = document.getElementById('pw-current').value;
+  const newPw   = document.getElementById('pw-new').value;
+  const confirm = document.getElementById('pw-confirm').value;
+
+  if (!current)         { toast('Please enter your current password', 'error'); return; }
+  if (!newPw)           { toast('Please enter a new password', 'error'); return; }
+  if (newPw.length < 6) { toast('New password must be at least 6 characters', 'error'); return; }
+  if (newPw !== confirm) { toast('Passwords do not match', 'error'); return; }
+  if (current === newPw) { toast('New password must be different from current', 'error'); return; }
+
+  // Verify current password locally (against what we know from login)
+  // We re-verify via the API login check to be safe
+  const verifyRes = await apiGet({ action: 'login', email: cu.email, pwd: current });
+  if (verifyRes.status !== 'ok') { toast('Current password is incorrect', 'error'); return; }
+
+  const btn = document.getElementById('pw-save-btn');
+  btn.textContent = 'Updating...'; btn.disabled = true;
+
+  try {
+    const r = await apiPost({
+      action: 'updateUser',
+      email:  cu.email,
+      name:   cu.name,
+      pwd:    newPw,
+      role:   cu.role,
+      dept:   cu.dept  || '',
+      phone:  cu.phone || ''
+    });
+    if (r.status !== 'ok') { toast(r.message || 'Failed to update password', 'error'); }
+    else {
+      toast('Password updated successfully!', 'success');
+      cm2('pm');
+      ['pw-current','pw-new','pw-confirm'].forEach(id => document.getElementById(id).value = '');
+    }
+  } catch(e) { toast('Error updating password', 'error'); }
+
+  btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Update Password';
+  btn.disabled = false;
+}
+
+// ════════════════════════════════════════════════
+//  UI SETUP
+// ════════════════════════════════════════════════
+function setupUI() {
+  const ini = initials(cu.name);
+  const av  = document.getElementById('sbav');
+  av.textContent = ini; av.style.background = cu.color;
+  document.getElementById('sbname').textContent = cu.name;
+  const re = document.getElementById('sbrole');
+  re.textContent = cu.role === 'admin' ? 'Admin' : 'Member';
+  re.className   = 'urole ' + (cu.role === 'admin' ? 'radmin' : 'ruser');
+  const isA = cu.role === 'admin';
+  ['adm-sec','nav-admin','nav-users'].forEach(id => document.getElementById(id).style.display = isA ? '' : 'none');
+  popAssign();
+  // Sync pill state
+  const pill = document.getElementById('theme-pill');
+  const theme = document.documentElement.getAttribute('data-theme') || 'light';
+  if (pill) pill.classList.toggle('on', theme === 'dark');
+}
+
+function popAssign() {
+  ['na','d-assign'].forEach(id => {
+    const s = document.getElementById(id);
+    s.innerHTML = '<option value="">Unassigned</option>';
+    users.filter(u => u.active).forEach(u => { const dept = u.dept ? u.dept.trim() : ""; s.innerHTML += `<option value="${u.email}">${u.name}${dept ? " · " + dept : ""}</option>`; });
+  });
+}
+
+// ════════════════════════════════════════════════
+//  NAVIGATION
+// ════════════════════════════════════════════════
+function sp(page) {
+  ['dashboard','tickets','search','admin','users'].forEach(p => {
+    document.getElementById('page-' + p).style.display = 'none';
+    const n = document.getElementById('nav-' + p);
+    if (n) n.classList.remove('active');
+  });
+  document.getElementById('page-' + page).style.display = '';
+  const n = document.getElementById('nav-' + page);
+  if (n) n.classList.add('active');
+  const titles = { dashboard:'Dashboard', tickets:'My Tickets', search:'Search All Tickets', admin:'All Tickets', users:'User Management' };
+  document.getElementById('tbtitle').textContent = titles[page] || page;
+  if (page === 'dashboard') rdash();
+  if (page === 'tickets')   rtick();
+  if (page === 'search')    rsearch();
+  if (page === 'admin')     radmin();
+  if (page === 'users')     rusers();
+  // Ticker only on dashboard
+  const ticker = document.getElementById('ticker-wrap');
+  if (ticker) ticker.style.display = (page === 'dashboard' && announcements.length) ? 'flex' : 'none';
+  // Sync mobile nav
+  syncMobNav(page);
+}
+
+// ════════════════════════════════════════════════
+//  HELPERS
+// ════════════════════════════════════════════════
+function myTickets() {
+  if (cu.role === 'admin') return tickets;
+  return tickets.filter(t => t.assignedTo === cu.email || t.createdBy === cu.email);
+}
+function getU(email)     { return users.find(u => u.email === email); }
+function getName(email)  { const u = getU(email); return u ? u.name : email || 'Unassigned'; }
+function getColor(email) { const u = getU(email); return u ? u.color : '#9ca3af'; }
+function initials(name)  { return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2); }
+
+function pb(p) {
+  const m = { critical:'pc', high:'ph', medium:'pm', low:'pl' };
+  return `<span class="badge ${m[p]||''}">${p.charAt(0).toUpperCase()+p.slice(1)}</span>`;
+}
+function sb(s) {
+  const m = { open:'so','waiting-approval':'swa','waiting-vendor':'swv', closed:'sc' };
+  const l = { open:'Open','waiting-approval':'Waiting for Approval','waiting-vendor':'Waiting with Vendor', closed:'Closed' };
+  return `<span class="badge ${m[s]||''}">${l[s]||s}</span>`;
+}
+function getDeptShort(email) {
+  const u = getU(email);
+  if (!u || !u.dept) return '';
+  // Take up to first 4 chars of each word, max 2 words → e.g. "Information Technology" → "Info Tech", "Sales" → "Sales"
+  return u.dept.trim();
+}
+function achip(email) {
+  if (!email) return '<span style="color:var(--text-3);font-size:13px">Unassigned</span>';
+  const c    = getColor(email);
+  const dept = getDeptShort(email);
+  return `<div class="achip">
+    <div class="aav" style="background:${c}">${initials(getName(email))}</div>
+    <div style="display:flex;flex-direction:column;line-height:1.2">
+      <span style="font-size:13px">${getName(email)}</span>
+      ${dept ? `<span style="font-size:10.5px;color:var(--text-3);font-weight:500;letter-spacing:.2px">${dept}</span>` : ''}
+    </div>
+  </div>`;
+}
+function fd(iso)  { return new Date(iso).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}); }
+function fdt(iso) { const d=new Date(iso); return d.toLocaleDateString('en-IN',{day:'2-digit',month:'short'})+' '+d.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'}); }
+function genColor(email) {
+  const colors=['#1a56db','#059669','#7c3aed','#d97706','#dc2626','#0ea5e9','#db2777','#65a30d'];
+  let h=0; for(let c of email) h=c.charCodeAt(0)+((h<<5)-h);
+  return colors[Math.abs(h)%colors.length];
+}
+
+// ════════════════════════════════════════════════
+//  SLA HELPERS
+// ════════════════════════════════════════════════
+function slaStatus(t) {
+  if (!t.slaDate || t.status === 'closed') return null;
+  const due  = new Date(t.slaDate);
+  const now  = new Date();
+  const diff = due - now;
+  const hrs  = diff / 36e5;
+  if (diff < 0) return 'breach';
+  if (hrs <= 4) return 'warn';
+  return 'ok';
+}
+function slaBadge(t) {
+  if (!t.slaDate) return '<span class="sla-none">No SLA</span>';
+  const due = new Date(t.slaDate);
+  const st  = slaStatus(t);
+  const dateStr = due.toLocaleDateString('en-IN',{day:'2-digit',month:'short'}) + ' ' + due.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+  if (t.status === 'closed') return `<span class="sla-ok"><span class="sla-dot"></span>${dateStr}</span>`;
+  if (st === 'breach') return `<span class="sla-breach"><span class="sla-dot"></span>⚠ Overdue · ${dateStr}</span>`;
+  if (st === 'warn')   return `<span class="sla-warn"><span class="sla-dot"></span>Due Soon · ${dateStr}</span>`;
+  return `<span class="sla-ok"><span class="sla-dot"></span>${dateStr}</span>`;
+}
+function toLocalInput(iso) {
+  if (!iso) return '';
+  const d = new Date(iso);
+  const pad = n => String(n).padStart(2,'0');
+  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
+// ════════════════════════════════════════════════
+//  DASHBOARD
+// ════════════════════════════════════════════════
+function rdash() {
+  const mine = myTickets();
+  const open = mine.filter(t => t.status === 'open').length;
+  const pend = mine.filter(t => t.status.startsWith('waiting')).length;
+  const crit = mine.filter(t => t.priority === 'critical' && t.status !== 'closed').length;
+  document.getElementById('sgrid').innerHTML = `
+    <div class="scard"><div class="slabel">Total Tickets</div><div class="sval" style="color:var(--primary)">${mine.length}</div><div class="ssub">All your tickets</div></div>
+    <div class="scard"><div class="slabel">Open</div><div class="sval" style="color:var(--info)">${open}</div><div class="ssub">Needs attention</div></div>
+    <div class="scard"><div class="slabel">Pending</div><div class="sval" style="color:var(--warning)">${pend}</div><div class="ssub">Awaiting action</div></div>
+    <div class="scard"><div class="slabel">Critical</div><div class="sval" style="color:var(--danger)">${crit}</div><div class="ssub">High priority open</div></div>`;
+  document.getElementById('nav-count').textContent = mine.filter(t => t.status !== 'closed').length;
+
+  const withSla   = mine.filter(t => t.slaDate && t.status !== 'closed');
+  const breached  = withSla.filter(t => slaStatus(t) === 'breach').length;
+  const warnCount = withSla.filter(t => slaStatus(t) === 'warn').length;
+  const onTrack   = withSla.filter(t => slaStatus(t) === 'ok').length;
+  document.getElementById('sla-grid').innerHTML = withSla.length > 0 ? `
+    <div class="sla-card">
+      <div class="sla-item"><div class="sla-val" style="color:var(--danger)">${breached}</div><div class="sla-lbl">SLA Breached</div></div>
+      <div class="sla-item"><div class="sla-val" style="color:var(--warning)">${warnCount}</div><div class="sla-lbl">Due Within 4h</div></div>
+      <div class="sla-item"><div class="sla-val" style="color:var(--success)">${onTrack}</div><div class="sla-lbl">On Track</div></div>
+    </div>` : '';
+
+  const recent = [...mine].sort((a,b) => new Date(b.createdAt)-new Date(a.createdAt)).slice(0,8);
+  document.getElementById('rec-tbody').innerHTML = recent.length
+    ? recent.map(t=>`<tr onclick="openDetail('${t.id}')">
+        <td><div class="tid">${t.id}</div><div class="ttitle">${t.title}</div></td>
+        <td>${pb(t.priority)}</td><td>${sb(t.status)}</td><td>${achip(t.assignedTo)}</td>
+        <td>${slaBadge(t)}</td>
+        <td style="color:var(--text-3);font-size:12px">${fd(t.createdAt)}</td></tr>`).join('')
+    : `<tr><td colspan="6"><div class="empty"><h3>No tickets yet</h3><p>Create your first ticket using the button above</p></div></td></tr>`;
+}
+
+// ════════════════════════════════════════════════
+//  MY TICKETS
+// ════════════════════════════════════════════════
+function rtick() {
+  const q  = (document.getElementById('tsearch').value||'').toLowerCase();
+  const sf = document.getElementById('tfs').value;
+  const pf = document.getElementById('tfp').value;
+  let list = myTickets();
+  if (q)  list = list.filter(t => t.title.toLowerCase().includes(q) || t.id.toLowerCase().includes(q));
+  if (sf) list = list.filter(t => t.status === sf);
+  if (pf) list = list.filter(t => t.priority === pf);
+  document.getElementById('tick-tbody').innerHTML = list.length
+    ? list.map(t=>`<tr onclick="openDetail('${t.id}')">
+        <td><div class="tid">${t.id}</div><div class="ttitle">${t.title}</div><div class="tdesc">${t.desc}</div></td>
+        <td>${pb(t.priority)}</td><td>${sb(t.status)}</td><td>${achip(t.assignedTo)}</td>
+        <td>${slaBadge(t)}</td>
+        <td style="color:var(--text-3);font-size:12px">${fd(t.createdAt)}</td>
+        <td onclick="event.stopPropagation()"><button class="btn bg bsm" onclick="openDetail('${t.id}')">View</button></td></tr>`).join('')
+    : `<tr><td colspan="7"><div class="empty"><h3>No tickets found</h3><p>Try changing your filters</p></div></td></tr>`;
+}
+
+// ════════════════════════════════════════════════
+//  ADMIN TICKETS
+// ════════════════════════════════════════════════
+function setAdminTab(tab, el) {
+  adminTab = tab;
+  document.querySelectorAll('.tabbtn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  const labels = { all:'All Tickets', unassigned:'Unassigned Tickets', open:'Open Tickets' };
+  document.getElementById('adm-title').textContent = labels[tab];
+  radmin();
+}
+function radmin() {
+  const sf = document.getElementById('afs').value;
+  const pf = document.getElementById('afp').value;
+  let list = [...tickets];
+  if (adminTab === 'unassigned') list = list.filter(t => !t.assignedTo);
+  if (adminTab === 'open')       list = list.filter(t => t.status === 'open');
+  if (sf) list = list.filter(t => t.status === sf);
+  if (pf) list = list.filter(t => t.priority === pf);
+  document.getElementById('adm-tbody').innerHTML = list.length
+    ? list.map(t=>`<tr onclick="openDetail('${t.id}')">
+        <td><div class="tid">${t.id}</div><div class="ttitle">${t.title}</div></td>
+        <td>${pb(t.priority)}</td><td>${sb(t.status)}</td><td>${achip(t.assignedTo)}</td><td>${achip(t.createdBy)}</td>
+        <td>${slaBadge(t)}</td>
+        <td style="color:var(--text-3);font-size:12px">${fd(t.createdAt)}</td>
+        <td onclick="event.stopPropagation()"><button class="btn bg bsm" onclick="openDetail('${t.id}')">View</button></td></tr>`).join('')
+    : `<tr><td colspan="8"><div class="empty"><h3>No tickets</h3><p>No tickets match the current filter</p></div></td></tr>`;
+}
+
+// ════════════════════════════════════════════════
+//  SEARCH ALL TICKETS
+// ════════════════════════════════════════════════
+function rsearch() {
+  const q  = (document.getElementById('gsearch').value||'').toLowerCase();
+  const sf = document.getElementById('gfs').value;
+  const pf = document.getElementById('gfp').value;
+  const hasFilter = q || sf || pf;
+  if (!hasFilter) {
+    document.getElementById('search-tbody').innerHTML =
+      `<tr><td colspan="7"><div class="empty">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--text-3)" stroke-width="1.5" style="margin:0 auto 10px;display:block"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <h3>Search any ticket</h3><p>Enter a ticket ID, title, assigned person or creator name</p>
+      </div></td></tr>`;
+    return;
+  }
+  let list = [...tickets];
+  if (q)  list = list.filter(t =>
+    t.title.toLowerCase().includes(q) || t.id.toLowerCase().includes(q) ||
+    getName(t.assignedTo).toLowerCase().includes(q) || getName(t.createdBy).toLowerCase().includes(q)
+  );
+  if (sf) list = list.filter(t => t.status === sf);
+  if (pf) list = list.filter(t => t.priority === pf);
+  document.getElementById('search-tbody').innerHTML = list.length
+    ? list.map(t=>`<tr onclick="openDetail('${t.id}')">
+        <td><div class="tid">${t.id}</div><div class="ttitle">${t.title}</div><div class="tdesc">${t.desc}</div></td>
+        <td>${pb(t.priority)}</td><td>${sb(t.status)}</td><td>${achip(t.assignedTo)}</td><td>${achip(t.createdBy)}</td>
+        <td>${slaBadge(t)}</td>
+        <td onclick="event.stopPropagation()"><button class="btn bg bsm" onclick="openDetail('${t.id}')">View</button></td></tr>`).join('')
+    : `<tr><td colspan="7"><div class="empty"><h3>No tickets found</h3><p>Try a different search term</p></div></td></tr>`;
+}
+
+// ════════════════════════════════════════════════
+//  USERS (ADMIN)
+// ════════════════════════════════════════════════
+function rusers() {
+  document.getElementById('utbody').innerHTML = users.map(u => {
+    const myT    = tickets.filter(t => t.assignedTo===u.email||t.createdBy===u.email).length;
+    const isMe   = u.email === cu.email;
+    return `<tr>
+      <td><div class="achip"><div class="aav" style="background:${u.color}">${initials(u.name)}</div><span>${u.name}</span></div></td>
+      <td style="color:var(--text-3);font-size:13px">${u.email}</td>
+      <td><span class="utag ${u.role==='admin'?'radmin':'ruser'}">${u.role==='admin'?'Admin':'User'}</span></td>
+      <td style="color:var(--text-2);font-size:13px">${u.dept||'—'}</td>
+      <td><span class="badge ${u.active?'sc':'pc'}">${u.active?'Active':'Inactive'}</span></td>
+      <td style="color:var(--text-2)">${myT}</td>
+      <td><div style="display:flex;gap:6px">
+        ${!isMe
+          ? `<button class="btn bg bsm" onclick="editUser('${u.email}')">Edit</button>
+             <button class="btn bdanger bsm" onclick="askDelete('${u.email}')">Remove</button>`
+          : '<span style="color:var(--text-3);font-size:12px">Protected</span>'}
+      </div></td></tr>`;
+  }).join('');
+}
+
+function openAddUser() {
+  uidEdit = null;
+  document.getElementById('um-title').textContent = 'Add New User';
+  document.getElementById('um-save').textContent  = 'Add User';
+  ['un','ue','upw','udept','uph'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('ur').value    = 'user';
+  document.getElementById('ue').disabled = false;
+  om('um');
+}
+function editUser(email) {
+  const u = getU(email); uidEdit = email;
+  document.getElementById('um-title').textContent = 'Edit User';
+  document.getElementById('um-save').textContent  = 'Save Changes';
+  document.getElementById('un').value    = u.name;
+  document.getElementById('ue').value    = u.email;
+  document.getElementById('ue').disabled = true;
+  document.getElementById('upw').value   = u.pwd || '';
+  document.getElementById('ur').value    = u.role;
+  document.getElementById('udept').value = u.dept  || '';
+  document.getElementById('uph').value   = u.phone || '';
+  om('um');
+}
+async function saveUser() {
+  const name  = document.getElementById('un').value.trim();
+  const email = document.getElementById('ue').value.trim().toLowerCase();
+  const pwd   = document.getElementById('upw').value;
+  const role  = document.getElementById('ur').value;
+  const dept  = document.getElementById('udept').value.trim();
+  const phone = document.getElementById('uph').value.trim();
+  if (!name||!email) { toast('Name and Email required','error'); return; }
+  if (!pwd)          { toast('Password required','error'); return; }
+  const btn = document.getElementById('um-save');
+  btn.textContent = 'Saving...'; btn.disabled = true;
+  try {
+    let r;
+    if (uidEdit) r = await apiPost({ action:'updateUser', email, name, pwd, role, dept, phone });
+    else         r = await apiPost({ action:'createUser', email, name, pwd, role, dept, phone });
+    if (r.status !== 'ok') { toast(r.message,'error'); btn.textContent='Save'; btn.disabled=false; return; }
+    showLoader('Updating team'); await loadAll(); hideLoader();
+    cm2('um'); popAssign(); rusers();
+    toast(uidEdit ? 'User updated' : 'User added', 'success');
+  } catch(e) { toast('Error saving user','error'); }
+  btn.textContent = uidEdit ? 'Save Changes' : 'Add User'; btn.disabled = false;
+}
+function askDelete(email) {
+  uidDel = email;
+  document.getElementById('del-name').textContent = getName(email);
+  om('dconf');
+}
+async function confirmDelete() {
+  try {
+    const r = await apiPost({ action:'deleteUser', email: uidDel });
+    if (r.status !== 'ok') { toast(r.message,'error'); return; }
+    showLoader('Removing user'); await loadAll(); hideLoader();
+    cm2('dconf'); rusers(); popAssign();
+    toast('User removed','success');
+  } catch(e) { hideLoader(); toast('Error removing user','error'); }
+}
+
+// ════════════════════════════════════════════════
+//  CREATE TICKET
+// ════════════════════════════════════════════════
+function openCreateModal() {
+  document.getElementById('nt').value   = '';
+  document.getElementById('nd').value   = '';
+  document.getElementById('np').value   = 'medium';
+  document.getElementById('na').value   = '';
+  document.getElementById('nsla').value = '';
+  document.getElementById('assign-wrap').style.display = '';
+  om('cm');
+}
+async function createTicket() {
+  const title = document.getElementById('nt').value.trim();
+  if (!title) { toast('Please enter a title','error'); return; }
+  const btn = document.querySelector('#cm .bp');
+  btn.textContent = 'Creating...'; btn.disabled = true;
+  const slaVal = document.getElementById('nsla').value;
+  try {
+    const r = await apiPost({
+      action:     'createTicket', title,
+      desc:       document.getElementById('nd').value.trim() || 'No description provided.',
+      priority:   document.getElementById('np').value,
+      status:     'open',
+      assignedTo: document.getElementById('na').value || cu.email,
+      createdBy:  cu.email,
+      slaDate:    slaVal ? new Date(slaVal).toISOString() : ''
+    });
+    if (r.status !== 'ok') { toast(r.message,'error'); btn.textContent='Create Ticket'; btn.disabled=false; return; }
+    showLoader('Saving ticket'); await loadAll(); hideLoader();
+    cm2('cm');
+    toast(r.data.id + ' created', 'success');
+    rdash(); rtick(); if (cu.role==='admin') radmin();
+  } catch(e) { hideLoader(); toast('Error creating ticket','error'); }
+  btn.textContent = 'Create Ticket'; btn.disabled = false;
+}
+
+// ════════════════════════════════════════════════
+//  TICKET DETAIL
+// ════════════════════════════════════════════════
+function openDetail(id) {
+  const t = tickets.find(x => x.id===id); if (!t) return;
+  ctid = id;
+  document.getElementById('d-id').textContent      = t.id;
+  document.getElementById('d-created').textContent = 'Created ' + fdt(t.createdAt);
+  document.getElementById('d-title').textContent   = t.title;
+  document.getElementById('d-desc').textContent    = t.desc;
+  document.getElementById('d-status').value        = t.status;
+  document.getElementById('d-priority').value      = t.priority;
+  document.getElementById('d-assign').value        = t.assignedTo || '';
+  document.getElementById('d-by').value            = getName(t.createdBy);
+  document.getElementById('d-meta').innerHTML      = pb(t.priority) + ' ' + sb(t.status);
+  document.getElementById('d-sla').value           = toLocalInput(t.slaDate);
+  document.getElementById('d-sla-status').innerHTML = slaBadge(t);
+  const isAdmin    = cu.role === 'admin';
+  const isCreator  = t.createdBy === cu.email;
+  const isAssigned = t.assignedTo === cu.email;
+  const canEdit    = isAdmin || isAssigned || isCreator;
+  const canPriority= isAdmin || isCreator;
+  const canSla     = isAdmin || isCreator;
+  document.getElementById('d-status').disabled   = !canEdit;
+  document.getElementById('d-priority').disabled = !canPriority;
+  document.getElementById('d-assign').disabled   = !canEdit;
+  document.getElementById('d-sla').disabled      = !canSla;
+  document.getElementById('d-readonly-notice').style.display = canEdit ? 'none' : 'flex';
+  document.getElementById('d-remark-wrap').style.display     = canEdit ? 'flex' : 'none';
+  rremarks(t); om('dm');
+}
+function rremarks(t) {
+  const el = document.getElementById('rlist');
+  el.innerHTML = t.remarks && t.remarks.length
+    ? t.remarks.map(r=>`<div class="ri"><div><span class="rauth">${getName(r.author)}</span><span class="rtime">${fdt(r.time)}</span></div><div class="rtxt">${r.text}</div></div>`).join('')
+    : '<div style="color:var(--text-3);font-size:13px;text-align:center;padding:14px 0">No remarks yet</div>';
+}
+async function uf(field) {
+  const t = tickets.find(x => x.id===ctid); if (!t) return;
+  const update = {};
+  if (field==='status')   { t.status     = document.getElementById('d-status').value;   update.status = t.status; }
+  if (field==='priority') { t.priority   = document.getElementById('d-priority').value; update.priority = t.priority; }
+  if (field==='assigned') { t.assignedTo = document.getElementById('d-assign').value;   update.assignedTo = t.assignedTo; }
+  if (field==='sla') {
+    const v = document.getElementById('d-sla').value;
+    t.slaDate = v ? new Date(v).toISOString() : ''; update.slaDate = t.slaDate;
+    document.getElementById('d-sla-status').innerHTML = slaBadge(t);
+  }
+  document.getElementById('d-meta').innerHTML = pb(t.priority) + ' ' + sb(t.status);
+  try {
+    await apiPost({ action:'updateTicket', id: ctid, ...update });
+    toast('Updated', 'success');
+    rdash(); rtick(); if (cu.role==='admin') radmin();
+  } catch(e) { toast('Error updating','error'); }
+}
+async function addRemark() {
+  const inp = document.getElementById('nr');
+  const btn = document.querySelector('#d-remark-wrap .bg');
+  const txt = inp.value.trim();
+  if (!txt) { toast('Please write a remark','error'); return; }
+  // Disable button + input while saving
+  btn.disabled = true; btn.textContent = '...';
+  inp.disabled = true;
+  try {
+    const r = await apiPost({ action:'addRemark', id: ctid, author: cu.email, text: txt });
+    if (r.status !== 'ok') { toast(r.message,'error'); return; }
+    const t = tickets.find(x => x.id===ctid);
+    if (t) { t.remarks = r.data; }
+    inp.value = ''; rremarks(t);
+    toast('Remark added','success');
+  } catch(e) { toast('Error adding remark','error'); }
+  // Re-enable after done
+  btn.disabled = false; btn.textContent = 'Add';
+  inp.disabled = false; inp.focus();
+}
+
+// ════════════════════════════════════════════════
+//  MODAL HELPERS
+// ════════════════════════════════════════════════
+function om(id)  { document.getElementById(id).classList.add('open'); }
+function cm2(id) { document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.mo').forEach(o => o.addEventListener('click', e => { if (e.target===o) o.classList.remove('open'); }));
+
+// ════════════════════════════════════════════════
+//  TICKER BAR — Announcements from DB
+// ════════════════════════════════════════════════
+let announcements = [];
+
+async function loadAnnouncements() {
+  try {
+    const r = await apiGet({ action: 'getAnnouncements' });
+    if (r.status === 'ok') announcements = r.data;
+  } catch(e) { announcements = []; }
+}
+
+function updateTicker() {
+  const wrap  = document.getElementById('ticker-wrap');
+  const track = document.getElementById('ticker-track');
+  const body  = document.getElementById('ticker-body');
+
+  if (!announcements.length) { wrap.style.display = 'none'; return; }
+
+  const html = announcements.map(a =>
+    `<span class="ticker-item">📢 ${a.message}</span>`
+  ).join('');
+
+  // Duplicate for seamless infinite loop
+  track.innerHTML = html + html;
+  wrap.style.display = 'flex';
+
+  // Pause on hover
+  body.onmouseenter = () => track.classList.add('paused');
+  body.onmouseleave = () => track.classList.remove('paused');
+
+  // Adjust speed based on content length
+  const totalChars = announcements.reduce((s, a) => s + a.message.length, 0);
+  const duration   = Math.max(20, Math.min(80, totalChars * 0.4));
+  track.style.animationDuration = duration + 's';
+}
+
+async function initTicker() {
+  await loadAnnouncements();
+  updateTicker();
+}
+
+// ════════════════════════════════════════════════
+//  TOAST
+// ════════════════════════════════════════════════
+function toast(msg, type='') {
+  const container = document.getElementById('tc');
+  const t = document.createElement('div');
+  t.className = 'toast' + (type ? ' '+type : '');
+  t.textContent = msg;
+  container.appendChild(t);
+  setTimeout(() => t.remove(), 3000);
+}
+
+
+// ════════════════════════════════════════════════
+//  MOBILE SIDEBAR OPEN/CLOSE
+// ════════════════════════════════════════════════
+function openSidebar() {
+  document.querySelector('.sidebar').classList.add('mob-open');
+  document.getElementById('sb-overlay').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+function closeSidebar() {
+  document.querySelector('.sidebar').classList.remove('mob-open');
+  document.getElementById('sb-overlay').classList.remove('show');
+  document.body.style.overflow = '';
+}
+// Close sidebar on escape key
+document.addEventListener('keydown', e => { if(e.key === 'Escape') closeSidebar(); });
+
+// ════════════════════════════════════════════════
+//  SYNC MOBILE BOTTOM NAV ACTIVE STATE
+// ════════════════════════════════════════════════
+function syncMobNav(page) {
+  ['dashboard','tickets','search'].forEach(p => {
+    const el = document.getElementById('mob-nav-' + p);
+    if (el) el.classList.toggle('active', p === page);
+  });
+  // Sync ticket badge
+  const mobBadge = document.getElementById('mob-nav-count');
+  const deskBadge = document.getElementById('nav-count');
+  if (mobBadge && deskBadge) {
+    const count = deskBadge.textContent;
+    mobBadge.textContent = count;
+    mobBadge.style.display = (parseInt(count) > 0) ? '' : 'none';
+  }
+}
+
+// ════════════════════════════════════════════════
+//  RIPPLE EFFECT ON ALL BUTTONS
+// ════════════════════════════════════════════════
+function addRipple(e) {
+  const btn = e.target.closest('.btn, .ni, .mob-ni, .mclose, .toggle-pill, .theme-toggle, .tabbtn');
+  if (!btn) return;
+  // Only run ripple on mouse — on touch it can delay click
+  if (e.type === 'touchstart') return;
+  const rect   = btn.getBoundingClientRect();
+  const size   = Math.max(rect.width, rect.height) * 1.5;
+  const x      = e.clientX - rect.left - size / 2;
+  const y      = e.clientY - rect.top  - size / 2;
+  const ripple = document.createElement('span');
+  ripple.className = 'ripple';
+  ripple.style.cssText = `width:${size}px;height:${size}px;left:${x}px;top:${y}px`;
+  if (getComputedStyle(btn).position === 'static') btn.style.position = 'relative';
+  btn.appendChild(ripple);
+  ripple.addEventListener('animationend', () => ripple.remove());
+}
+document.addEventListener('mousedown', addRipple);
+
+// ════════════════════════════════════════════════
+//  SERVICE WORKER REGISTRATION (PWA)
+// ════════════════════════════════════════════════
+if ('serviceWorker' in navigator) {
+  const swCode = `
+    const CACHE = 'ticketdesk-v1';
+    const ASSETS = ['/'];
+    self.addEventListener('install', e => {
+      e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS).catch(()=>{})));
+      self.skipWaiting();
+    });
+    self.addEventListener('activate', e => {
+      e.waitUntil(caches.keys().then(keys =>
+        Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))
+      ));
+      self.clients.claim();
+    });
+    self.addEventListener('fetch', e => {
+      if (e.request.method !== 'GET') return;
+      e.respondWith(
+        fetch(e.request).catch(() =>
+          caches.match(e.request).then(r => r || fetch(e.request))
+        )
+      );
+    });
+  `;
+  const blob = new Blob([swCode], { type: 'application/javascript' });
+  const swUrl = URL.createObjectURL(blob);
+  navigator.serviceWorker.register(swUrl).catch(() => {});
+}
+</script>
+</body>
+</html>
